@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [Suite]" guice-stage="DEVELOPMENT">
+  <parameter name="reportname" value="ABChopra_SignIn"/>
+  <test thread-count="5" name="SignInTesting(failed)">
+    <parameter name="testType" value="Signup"/>
+    <parameter name="platformName" value="Android"/>
+    <classes>
+      <class name="testPackage.TC_004_NewUserSignUp">
+        <methods>
+          <include name="setUp"/>
+          <include name="Validate_SignUp_Scenarios" invocation-numbers="0"/>
+          <include name="tearDown"/>
+          <include name="testDetails"/>
+          <include name="startReports"/>
+          <include name="stopReports"/>
+        </methods>
+      </class> <!-- testPackage.TC_004_NewUserSignUp -->
+    </classes>
+  </test> <!-- SignInTesting(failed) -->
+</suite> <!-- Failed suite [Suite] -->

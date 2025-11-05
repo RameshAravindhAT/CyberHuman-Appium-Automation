@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+ <parameter name="reportname" value="ABChopra_SignIn"/>
+  <test name="SignInTesting">
+  <parameter name="platformName" value="Android"/>
+        <parameter name="testType" value="Signup"/>
+    <classes>
+      <class name="testPackage.TC_004_NewUserSignUp"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->

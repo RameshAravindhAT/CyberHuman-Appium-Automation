@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="AB CHOPRA APPLICATION" parallel="tests" thread-count="2">
+    <!-- ✅ Pass report name for @BeforeSuite -->
+    <parameter name="reportname" value="ABChopra_SignUpReport"/>
+    <test name="SignUpReport">
+        <parameter name="platformName" value="Android"/>
+        <parameter name="testType" value="SignIn"/>
+        <classes>
+            <class name="testPackage.TC_002_SignIn"/>
+        </classes>
+    </test>
+
+    <test name="SignInReport">
+        <parameter name="platformName" value="Android"/>
+        <parameter name="testType" value="SignIn"/>
+        <classes>
+            <class name="testPackage.TC_004_NewUserSignUp"/>
+        </classes>
+    </test>
+</suite>

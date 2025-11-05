@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite thread-count="2" parallel="tests" name="Failed suite [AB CHOPRA APPLICATION]" guice-stage="DEVELOPMENT">
+  <parameter name="reportname" value="ABChopra_SignUpReport"/>
+  <test thread-count="2" parallel="tests" name="SignUpReport(failed)">
+    <parameter name="testType" value="SignIn"/>
+    <parameter name="platformName" value="Android"/>
+    <classes>
+      <class name="testPackage.TC_002_SignIn">
+        <methods>
+          <include name="setUp"/>
+          <include name="tearDown"/>
+          <include name="testDetails"/>
+          <include name="Validate_Login_Scenarios" invocation-numbers="7 9 11"/>
+          <include name="startReports"/>
+          <include name="stopReports"/>
+        </methods>
+      </class> <!-- testPackage.TC_002_SignIn -->
+    </classes>
+  </test> <!-- SignUpReport(failed) -->
+</suite> <!-- Failed suite [AB CHOPRA APPLICATION] -->
