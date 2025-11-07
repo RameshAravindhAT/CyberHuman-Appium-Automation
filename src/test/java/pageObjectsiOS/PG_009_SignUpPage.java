@@ -1,12 +1,12 @@
-package pageObjects;
+package pageObjectsiOS;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
-import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import projectSpecifications.BaseClass;
 import utils.ExtentReportManager;
 import utils.TestContext;
@@ -14,64 +14,69 @@ import utils.TestContext;
 public class PG_009_SignUpPage extends BaseClass {
 
     public PG_009_SignUpPage(WebDriver driver) {
-    	TestContext.setDriver(driver);
+        TestContext.setDriver(driver);
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
-    // 1️⃣ Sign Up Header (Accessibility ID = SIGN UP)
-    @AndroidFindBy(accessibility = "SIGN UP")
+    // === Primary Locators (iOS) ===
+    @iOSXCUITFindBy(accessibility = "SIGN UP")
     public WebElement lblSignUpHeader;
 
-    // 2️⃣ Name Input Field
-    @AndroidFindBy(xpath = "//android.widget.EditText[@hint='Name']")
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeTextField[`placeholderValue == 'Name'`]")
     public WebElement txtName;
 
-    // 3️⃣ Email Input Field
-    @AndroidFindBy(xpath = "//android.widget.EditText[@hint='Email']")
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeTextField[`placeholderValue == 'Email'`]")
     public WebElement txtEmail;
 
-    // 4️⃣ Select Country
-    @AndroidFindBy(accessibility = "Country")
+    @iOSXCUITFindBy(accessibility = "Country")
     public WebElement btnCountry;
 
-    // 5️⃣ Password Field
-    @AndroidFindBy(xpath = "//android.widget.EditText[@hint='Password']")
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeSecureTextField[`placeholderValue == 'Password'`]")
     public WebElement txtPassword;
 
-    // 6️⃣ Confirm Password Field
-    @AndroidFindBy(xpath = "//android.widget.EditText[@hint='Confirm Password']")
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeSecureTextField[`placeholderValue == 'Confirm Password'`]")
     public WebElement txtConfirmPassword;
 
-    // 7️⃣ Sign In Link (Already have an account)
-    @AndroidFindBy(accessibility = "Already have an account? Sign in")
+    @iOSXCUITFindBy(accessibility = "Already have an account? Sign in")
     public WebElement linkSignIn;
 
-    // 8️⃣ Privacy / Terms Checkbox
-    @AndroidFindBy(className = "android.widget.CheckBox")
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeSwitch")
     public WebElement chkPrivacy;
 
-    // 9️⃣ Continue Button
-    @AndroidFindBy(accessibility = "CONTINUE")
+    @iOSXCUITFindBy(accessibility = "CONTINUE")
     public WebElement btnContinue;
 
+    // === Fallback Locators (iOS) ===
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@name='SIGN UP']")
+    public WebElement lblSignUpHeaderXpath;
+
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeTextField[@value='Name' or @placeholder='Name']")
+    public WebElement txtNameXpath;
+
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeTextField[@value='Email' or @placeholder='Email']")
+    public WebElement txtEmailXpath;
+
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeButton[@name='Country']")
+    public WebElement btnCountryXpath;
+
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeSecureTextField[1]")
+    public WebElement txtPasswordXpath;
+
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeSecureTextField[2]")
+    public WebElement txtConfirmPasswordXpath;
+
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeButton[@name='CONTINUE']")
+    public WebElement btnContinueXpath;
+
     // ===================================================================
-    // METHODS FOLLOWING YOUR NAMING & LOGGING PATTERN
+    // 1. Verify Sign Up Header
     // ===================================================================
-
-
-
-
     public PG_009_SignUpPage Verify_Sign_Up_Header_Displayed() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-
-        	PG_002_SignInPage signInPage = new PG_002_SignInPage(TestContext.getDriver());
-
-        	signInPage.Click_On_SignUp();
-
-        	Thread.sleep(2000);
-
-            if (lblSignUpHeader.isDisplayed()) {
+            Thread.sleep(2000);
+            WebElement header = isDisplayedSafe(lblSignUpHeader) ? lblSignUpHeader : lblSignUpHeaderXpath;
+            if (header.isDisplayed()) {
                 ExtentReportManager.pass(methodName + " - Sign Up header is displayed");
                 TestContext.getLogger().info(methodName);
             } else {
@@ -85,14 +90,17 @@ public class PG_009_SignUpPage extends BaseClass {
         return this;
     }
 
-
-
+    // ===================================================================
+    // 2. Enter Name
+    // ===================================================================
     public PG_009_SignUpPage Enter_Name(String name) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-        	txtName.click();
-            txtName.clear();
-            txtName.sendKeys(name);
+            WebElement field = isDisplayedSafe(txtName) ? txtName : txtNameXpath;
+            field.click();
+            field.clear();
+            field.sendKeys(name);
+            mobileActions.hideKeyboard();
             ExtentReportManager.info(methodName + " - Entered name: " + name);
             TestContext.getLogger().info(methodName + " - Name: " + name);
         } catch (Exception e) {
@@ -103,12 +111,17 @@ public class PG_009_SignUpPage extends BaseClass {
         return this;
     }
 
+    // ===================================================================
+    // 3. Enter Email
+    // ===================================================================
     public PG_009_SignUpPage Enter_Email(String email) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-        	txtEmail.click();
-            txtEmail.clear();
-            txtEmail.sendKeys(email);
+            WebElement field = isDisplayedSafe(txtEmail) ? txtEmail : txtEmailXpath;
+            field.click();
+            field.clear();
+            field.sendKeys(email);
+            mobileActions.hideKeyboard();
             ExtentReportManager.info(methodName + " - Entered email: " + email);
             TestContext.getLogger().info(methodName + " - Email: " + email);
         } catch (Exception e) {
@@ -119,45 +132,45 @@ public class PG_009_SignUpPage extends BaseClass {
         return this;
     }
 
+    // ===================================================================
+    // 4. Click & Select Country (iOS Picker Wheel)
+    // ===================================================================
     public PG_009_SignUpPage Click_and_Select_the_Country(String country) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-            btnCountry.click();
+            WebElement countryBtn = isDisplayedSafe(btnCountry) ? btnCountry : btnCountryXpath;
+            countryBtn.click();
             ExtentReportManager.info(methodName + " - Opened country picker");
 
+            // iOS uses XCUIElementTypePickerWheel
+            By countryLocator = By.xpath("//XCUIElementTypePickerWheel[@name='" + country + "']");
+            WebElement picker = TestContext.getDriver().findElement(countryLocator);
 
+            // Tap and select via picker wheel
+            picker.sendKeys(country);
+            mobileActions.hideKeyboard();
 
-            By countryLocator = By.xpath("//*[@content-desc='" + country + "']");
-
-            mobileActions.scrollToText(country);
-
-//            boolean selected = mobileActions.SwipeFromDropdown(
-//                "xpath://android.view.View[@scrollable='true']",
-//                countryLocator,
-//                "up"
-//            );
-//
-//            if (!selected) {
-//                throw new RuntimeException("Failed to select: " + country);
-//            }
-//
-//            ExtentReportManager.pass(methodName + " - Selected: " + country);
-//            TestContext.getLogger().info(methodName + " - Success");
-
+            ExtentReportManager.pass(methodName + " - Selected: " + country);
+            TestContext.getLogger().info(methodName + " - Country selected: " + country);
         } catch (Exception e) {
-            ExtentReportManager.fail(methodName);
+            ExtentReportManager.fail(methodName + " - Failed to select country: " + country);
             TestContext.getLogger().error(methodName + " - Failed", e);
             throw new RuntimeException(e);
         }
         return this;
     }
 
+    // ===================================================================
+    // 5. Enter Password
+    // ===================================================================
     public PG_009_SignUpPage Enter_Password(String password) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-        	txtPassword.click();
-            txtPassword.clear();
-            txtPassword.sendKeys(password);
+            WebElement field = isDisplayedSafe(txtPassword) ? txtPassword : txtPasswordXpath;
+            field.click();
+            field.clear();
+            field.sendKeys(password);
+            mobileActions.hideKeyboard();
             ExtentReportManager.info(methodName + " - Password entered");
             TestContext.getLogger().info(methodName);
         } catch (Exception e) {
@@ -168,12 +181,17 @@ public class PG_009_SignUpPage extends BaseClass {
         return this;
     }
 
+    // ===================================================================
+    // 6. Enter Confirm Password
+    // ===================================================================
     public PG_009_SignUpPage Enter_Confirm_Password(String confirmPassword) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-        	txtConfirmPassword.click();
-            txtConfirmPassword.clear();
-            txtConfirmPassword.sendKeys(confirmPassword);
+            WebElement field = isDisplayedSafe(txtConfirmPassword) ? txtConfirmPassword : txtConfirmPasswordXpath;
+            field.click();
+            field.clear();
+            field.sendKeys(confirmPassword);
+            mobileActions.hideKeyboard();
             ExtentReportManager.info(methodName + " - Confirm password entered");
             TestContext.getLogger().info(methodName);
         } catch (Exception e) {
@@ -184,22 +202,26 @@ public class PG_009_SignUpPage extends BaseClass {
         return this;
     }
 
+    // ===================================================================
+    // 7. Click Sign In Link
+    // ===================================================================
     public PG_009_SignUpPage Click_On_Sign_In_Link() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
             linkSignIn.click();
             ExtentReportManager.info(methodName);
             TestContext.getLogger().info(methodName);
-
-            // Optional: Return Sign In page if navigation happens
-            return this;
         } catch (Exception e) {
             ExtentReportManager.fail(methodName);
             TestContext.getLogger().error(methodName + " - Failed to click Sign In link", e);
             throw new RuntimeException(e);
         }
+        return this;
     }
 
+    // ===================================================================
+    // 8. Click Privacy Checkbox (iOS uses Switch)
+    // ===================================================================
     public PG_009_SignUpPage Click_On_Privacy_Checkbox() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
@@ -216,15 +238,16 @@ public class PG_009_SignUpPage extends BaseClass {
         return this;
     }
 
+    // ===================================================================
+    // 9. Click Continue Button
+    // ===================================================================
     public PG_009_SignUpPage Click_On_Continue_Button() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-            btnContinue.click();
+            WebElement continueBtn = isDisplayedSafe(btnContinue) ? btnContinue : btnContinueXpath;
+            continueBtn.click();
             ExtentReportManager.info(methodName);
             TestContext.getLogger().info(methodName);
-
-            // Optionally return next page (e.g., OTP or Dashboard)
-            // return new PG_XXX_NextPage(TestContext.getDriver());
         } catch (Exception e) {
             ExtentReportManager.fail(methodName);
             TestContext.getLogger().error(methodName + " - Failed to click CONTINUE", e);
@@ -233,7 +256,9 @@ public class PG_009_SignUpPage extends BaseClass {
         return this;
     }
 
-    // Bonus: Full Sign-Up Flow Method (Optional)
+    // ===================================================================
+    // Bonus: Full Sign-Up Flow
+    // ===================================================================
     public PG_009_SignUpPage Fill_Sign_Up_Form(String name, String email, String countryName, String password, String confirmPassword) {
         return this
             .Verify_Sign_Up_Header_Displayed()
@@ -244,5 +269,16 @@ public class PG_009_SignUpPage extends BaseClass {
             .Enter_Confirm_Password(confirmPassword)
             .Click_On_Privacy_Checkbox()
             .Click_On_Continue_Button();
+    }
+
+    // ===================================================================
+    // Helper: Safe Display Check
+    // ===================================================================
+    private boolean isDisplayedSafe(WebElement el) {
+        try {
+            return el != null && el.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

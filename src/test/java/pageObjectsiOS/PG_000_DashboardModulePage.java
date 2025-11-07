@@ -1,4 +1,4 @@
-package pageObjects;
+package pageObjectsiOS;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import io.appium.java_client.pagefactory.AndroidFindBy;
+import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import projectSpecifications.BaseClass;
 import utils.ExtentReportManager;
@@ -24,60 +24,56 @@ import utils.TestContext;
 
 public class PG_000_DashboardModulePage extends BaseClass {
 
-public PG_000_DashboardModulePage(WebDriver webDriver) {
-	 TestContext.setDriver(webDriver);
-    PageFactory.initElements(new AppiumFieldDecorator(webDriver), this);
-}
+    public PG_000_DashboardModulePage(WebDriver webDriver) {
+        TestContext.setDriver(webDriver);
+        PageFactory.initElements(new AppiumFieldDecorator(webDriver), this);
+    }
 
-// === Bottom Navigation Tabs ===
-    @AndroidFindBy(accessibility = "HOME")
+    // === Bottom Navigation Tabs (iOS) ===
+    @iOSXCUITFindBy(accessibility = "HOME")
     public WebElement homeTab;
 
-    @AndroidFindBy(accessibility = "DAILY PRESCRIPTION")
+    @iOSXCUITFindBy(accessibility = "DAILY PRESCRIPTION")
     public WebElement dailyPrescriptionTab;
 
-    @AndroidFindBy(accessibility = "DATA BANK")
+    @iOSXCUITFindBy(accessibility = "DATA BANK")
     public WebElement dataBankTab;
 
-    @AndroidFindBy(accessibility = "AB CHOPRA HOUSE")
+    @iOSXCUITFindBy(accessibility = "AB CHOPRA HOUSE")
     public WebElement abChopraHouseTab;
 
-    @AndroidFindBy(accessibility = "PROFILE")
+    @iOSXCUITFindBy(accessibility = "PROFILE")
     public WebElement profileTab;
 
-    @AndroidFindBy(accessibility = "WELLBEING \nDASHBOARD\nHOME")
+    @iOSXCUITFindBy(accessibility = "WELLBEING \nDASHBOARD\nHOME")
     public WebElement wellbeingDashboardHomeTab;
 
-    @AndroidFindBy(accessibility = "WELLBEING \nDASHBOARD\nDAILY PRESCRIPTION")
+    @iOSXCUITFindBy(accessibility = "WELLBEING \nDASHBOARD\nDAILY PRESCRIPTION")
     public WebElement wellbeingDashboardDailyPrescriptionTab;
 
-    // === Fallback Locators (Optional but Safe) ===
-    @AndroidFindBy(xpath = "//android.widget.ImageView[contains(@content-desc, 'WELLBEING') and contains(@content-desc, 'DASHBOARD') and contains(@content-desc, 'HOME')]")
-    public WebElement wellbeingDashboardHomeTabXpath;
+    // === Fallback Locators for iOS ===
+    // Using -ios class chain (faster than XPath)
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeButton[`label CONTAINS 'WELLBEING' AND label CONTAINS 'DASHBOARD' AND label CONTAINS 'HOME'`]")
+    public WebElement wellbeingDashboardHomeTabClassChain;
 
-    @AndroidFindBy(uiAutomator = "new UiSelector().descriptionContains(\"WELLBEING\").descriptionContains(\"DASHBOARD\").descriptionContains(\"HOME\")")
-    public WebElement wellbeingDashboardHomeTabUiSelector;
+    @iOSXCUITFindBy(iOSNsPredicate = "label CONTAINS 'WELLBEING' AND label CONTAINS 'DASHBOARD' AND label CONTAINS 'HOME'")
+    public WebElement wellbeingDashboardHomeTabPredicate;
 
-
-
-    // Fallback XPaths
-    @AndroidFindBy(xpath = "//android.view.View[@content-desc='HOME']")
+    // Fallback using XPath (less preferred, but safe)
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeButton[@label='HOME']")
     public WebElement homeTabXpath;
 
-    @AndroidFindBy(xpath = "//android.view.View[@content-desc='DAILY PRESCRIPTION']")
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeButton[@label='DAILY PRESCRIPTION']")
     public WebElement dailyPrescriptionTabXpath;
 
-    @AndroidFindBy(xpath = "//android.view.View[@content-desc='DATA BANK']")
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeButton[@label='DATA BANK']")
     public WebElement dataBankTabXpath;
 
-    @AndroidFindBy(xpath = "//android.view.View[@content-desc='AB CHOPRA HOUSE']")
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeButton[@label='AB CHOPRA HOUSE']")
     public WebElement abChopraHouseTabXpath;
 
-    @AndroidFindBy(xpath = "//android.view.View[@content-desc='PROFILE']")
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeButton[@label='PROFILE']")
     public WebElement profileTabXpath;
-
-    // Constructor
-
 
     // ===================================================================
     // 1. Click HOME Tab
@@ -85,7 +81,7 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
     public PG_000_DashboardModulePage Click_On_Home_Tab() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-            WebElement target = homeTab.isDisplayed() ? homeTab : homeTabXpath;
+            WebElement target = isDisplayedSafe(homeTab) ? homeTab : homeTabXpath;
             target.click();
             ExtentReportManager.info(methodName);
             TestContext.getLogger().info(methodName);
@@ -103,7 +99,7 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
     public PG_000_DashboardModulePage Click_On_Daily_Prescription_Tab() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-            WebElement target = dailyPrescriptionTab.isDisplayed() ? dailyPrescriptionTab : dailyPrescriptionTabXpath;
+            WebElement target = isDisplayedSafe(dailyPrescriptionTab) ? dailyPrescriptionTab : dailyPrescriptionTabXpath;
             target.click();
             ExtentReportManager.info(methodName);
             TestContext.getLogger().info(methodName);
@@ -121,7 +117,7 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
     public PG_000_DashboardModulePage Click_On_Data_Bank_Tab() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-            WebElement target = dataBankTab.isDisplayed() ? dataBankTab : dataBankTabXpath;
+            WebElement target = isDisplayedSafe(dataBankTab) ? dataBankTab : dataBankTabXpath;
             target.click();
             ExtentReportManager.info(methodName);
             TestContext.getLogger().info(methodName);
@@ -139,7 +135,7 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
     public PG_000_DashboardModulePage Click_On_AB_Chopra_House_Tab() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-            WebElement target = abChopraHouseTab.isDisplayed() ? abChopraHouseTab : abChopraHouseTabXpath;
+            WebElement target = isDisplayedSafe(abChopraHouseTab) ? abChopraHouseTab : abChopraHouseTabXpath;
             target.click();
             ExtentReportManager.info(methodName);
             TestContext.getLogger().info(methodName);
@@ -157,7 +153,7 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
     public PG_000_DashboardModulePage Click_On_Profile_Tab() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-            WebElement target = profileTab.isDisplayed() ? profileTab : profileTabXpath;
+            WebElement target = isDisplayedSafe(profileTab) ? profileTab : profileTabXpath;
             target.click();
             ExtentReportManager.info(methodName);
             TestContext.getLogger().info(methodName);
@@ -178,7 +174,6 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
             List<WebElement> modules = Arrays.asList(
                 homeTab, dailyPrescriptionTab, dataBankTab, abChopraHouseTab, profileTab
             );
-
             List<String> moduleNames = Arrays.asList(
                 "HOME", "DAILY PRESCRIPTION", "DATA BANK", "AB CHOPRA HOUSE", "PROFILE"
             );
@@ -189,8 +184,7 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
             for (int swipe = 0; swipe < maxSwipes && !allVisible; swipe++) {
                 allVisible = true;
                 for (int i = 0; i < modules.size(); i++) {
-                    WebElement el = modules.get(i);
-                    if (!isDisplayedWithFallback(el)) {
+                    if (!isDisplayedWithFallback(modules.get(i))) {
                         allVisible = false;
                         swipeUp();
                         Thread.sleep(800);
@@ -199,7 +193,7 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
                 }
             }
 
-            // Final check
+            // Final verification
             for (int i = 0; i < modules.size(); i++) {
                 if (!isDisplayedWithFallback(modules.get(i))) {
                     throw new Exception(moduleNames.get(i) + " is not displayed after swiping");
@@ -208,7 +202,6 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
 
             ExtentReportManager.info(methodName + " - All 5 modules are displayed");
             TestContext.getLogger().info(methodName + " - All modules verified");
-
         } catch (Exception e) {
             ExtentReportManager.fail(methodName + " - Verification failed");
             TestContext.getLogger().error(methodName + " - One or more modules not visible", e);
@@ -218,79 +211,58 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
     }
 
     // ===================================================================
-    // Helper: Swipe Up (W3C - Non-deprecated)
+    // Helper: Swipe Up (W3C - Cross-platform)
     // ===================================================================
     private void swipeUp() {
-        int width = TestContext.getDriver().manage().window().getSize().width;
-        int height = TestContext.getDriver().manage().window().getSize().height;
+        Dimension size = TestContext.getDriver().manage().window().getSize();
+        int width = size.width;
+        int height = size.height;
 
         int startX = width / 2;
         int startY = (int) (height * 0.8);
         int endY = (int) (height * 0.2);
 
-        var finger = new org.openqa.selenium.interactions.PointerInput(
-            org.openqa.selenium.interactions.PointerInput.Kind.TOUCH, "finger");
-        var swipe = new org.openqa.selenium.interactions.Sequence(finger, 1)
-            .addAction(finger.createPointerMove(Duration.ofMillis(0),
-                org.openqa.selenium.interactions.PointerInput.Origin.viewport(), startX, startY))
-            .addAction(finger.createPointerDown(org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT.asArg()))
-            .addAction(finger.createPointerMove(Duration.ofMillis(800),
-                org.openqa.selenium.interactions.PointerInput.Origin.viewport(), startX, endY))
-            .addAction(finger.createPointerUp(org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT.asArg()));
+        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+        Sequence swipe = new Sequence(finger, 1)
+            .addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), startX, startY))
+            .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
+            .addAction(finger.createPointerMove(Duration.ofMillis(600), PointerInput.Origin.viewport(), startX, endY))
+            .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 
-        ((RemoteWebDriver) TestContext.getDriver()).perform(Arrays.asList(swipe));
+        ((RemoteWebDriver) TestContext.getDriver()).perform(Collections.singletonList(swipe));
     }
 
-
+    // ===================================================================
+    // Swipe Up from Wellbeing Dashboard Bottom Tab
+    // ===================================================================
     public PG_000_DashboardModulePage swipe_Up_WellBeing_Dashboard() {
-        String methodName = Thread.currentThread()
-                .getStackTrace()[1].getMethodName().replace("_", " ");
-
+        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-            // ---- Wait for bottom navigation tab to be visible -----------------------
-            WebElement bottomNav = wellbeingDashboardDailyPrescriptionTab; // Your element
-            new WebDriverWait(TestContext.getDriver(), Duration.ofSeconds(10))
-                    .until(ExpectedConditions.visibilityOf(bottomNav));
+            WebElement bottomNav = wellbeingDashboardDailyPrescriptionTab;
 
-            // ---- Get coordinates (starting point = center of bottom tab) ------------
+            // Wait for element
+            new WebDriverWait(TestContext.getDriver(), Duration.ofSeconds(10))
+                .until(ExpectedConditions.visibilityOf(bottomNav));
+
             Point loc = bottomNav.getLocation();
             Dimension sz = bottomNav.getSize();
             int startX = loc.getX() + sz.getWidth() / 2;
             int startY = loc.getY() + sz.getHeight() / 2;
+            int endY = (int) (TestContext.getDriver().manage().window().getSize().getHeight() * 0.20);
 
-            // Swipe end point: 20% of the screen height from top
-            int endY = (int) (TestContext.getDriver()
-                    .manage().window().getSize().getHeight() * 0.20);
-
-            // ---- W3C Action: Swipe Up Gesture --------------------------------------
             PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
-            Sequence swipe = new Sequence(finger, 1);
-
-            // 1. Move finger to starting point instantly
-            swipe.addAction(finger.createPointerMove(Duration.ZERO,
-                    PointerInput.Origin.viewport(), startX, startY));
-
-            // 2. Finger touches down
-            swipe.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
-
-            // 3. Hold at the same position (optional pause)
-            swipe.addAction(finger.createPointerMove(Duration.ofMillis(800),
-                    PointerInput.Origin.viewport(), startX, startY));
-
-            // 4. Move to swipe end position (swipe up)
-            swipe.addAction(finger.createPointerMove(Duration.ofMillis(600),
-                    PointerInput.Origin.viewport(), startX, endY));
-
-            // 5. Release finger
-            swipe.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+            Sequence swipe = new Sequence(finger, 1)
+                .addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY))
+                .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
+                .addAction(finger.createPointerMove(Duration.ofMillis(800), PointerInput.Origin.viewport(), startX, startY))
+                .addAction(finger.createPointerMove(Duration.ofMillis(600), PointerInput.Origin.viewport(), startX, endY))
+                .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 
             ((RemoteWebDriver) TestContext.getDriver()).perform(Collections.singletonList(swipe));
-
             Thread.sleep(3000);
 
             ExtentReportManager.info(methodName + " – Swipe Up from bottom navigation");
             TestContext.getLogger().info(methodName + " – Success");
-
         } catch (Exception e) {
             ExtentReportManager.fail(methodName + " – Failed");
             TestContext.getLogger().error(methodName + " – Error", e);
@@ -299,20 +271,18 @@ public PG_000_DashboardModulePage(WebDriver webDriver) {
         return this;
     }
 
-
+    // ===================================================================
+    // Helper: Safe Display Check
+    // ===================================================================
     private boolean isDisplayedSafe(WebElement el) {
-        try { return el != null && el.isDisplayed(); }
-        catch (Exception e) { return false; }
-    }
-
-    // Helper: Check visibility safely
-    private boolean isDisplayedWithFallback(WebElement el) {
         try {
             return el != null && el.isDisplayed();
         } catch (Exception e) {
             return false;
         }
+    }
 
-}
-
+    private boolean isDisplayedWithFallback(WebElement el) {
+        return isDisplayedSafe(el);
+    }
 }

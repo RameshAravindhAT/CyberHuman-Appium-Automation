@@ -1,4 +1,4 @@
-package pageObjects;
+package pageObjectsiOS;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,83 +9,99 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import projectSpecifications.BaseClass;
 import utils.ExtentReportManager;
 import utils.TestContext;
 
 public class PG_005_DailyPriorityPage extends BaseClass {
 
+    private WebDriverWait wait;
+
     public PG_005_DailyPriorityPage(AppiumDriver driver) {
         TestContext.setDriver(driver);
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
+        wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(15));
     }
 
-    // ✅ Locators
-    // DAILY PRIORITY Title
-    @AndroidFindBy(accessibility = "DAILY PRIORITY")    // Or use "DAILY  PRIORITY" if \n causes issue
+    // === Primary Locators (iOS) ===
+    @iOSXCUITFindBy(accessibility = "DAILY PRIORITY")
     public WebElement dailyPriorityTitle;
 
-    // Username (Example: "RAMESH ARAVINDH")
-    @AndroidFindBy(xpath = "//android.view.View[contains(@content-desc,' ')]")
+    // Dynamic: Username (e.g., "RAMESH ARAVINDH")
+    @iOSXCUITFindBy(iOSNsPredicate = "type == 'XCUIElementTypeStaticText' AND name CONTAINS[c] ' '")
     public WebElement txtUserName;
 
-    @AndroidFindBy(xpath = "//android.view.View[contains(@content-desc, ',')]")
+    // Date (e.g., "Monday, November 4")
+    @iOSXCUITFindBy(iOSNsPredicate = "type == 'XCUIElementTypeStaticText' AND name CONTAINS ','")
     public WebElement txtDate;
 
-    @AndroidFindBy(xpath = "//android.view.View[(contains(@content-desc,'AM') or contains(@content-desc,'PM'))]")
+    // Time (e.g., "10:30 AM")
+    @iOSXCUITFindBy(iOSNsPredicate = "type == 'XCUIElementTypeStaticText' AND (name CONTAINS 'AM' OR name CONTAINS 'PM')")
     public WebElement txtTime;
 
-    // Session priority (Example: "Afternoon Priority")
-    @AndroidFindBy(xpath = "//android.view.View[contains(@content-desc,'Priority')]")
+    // Session Priority (e.g., "Afternoon Priority")
+    @iOSXCUITFindBy(iOSNsPredicate = "type == 'XCUIElementTypeStaticText' AND name CONTAINS 'Priority'")
     public WebElement txtSessionPriority;
 
-    // Nutrition Topic (Example: "Nutrition & Metabolism")
-    @AndroidFindBy(xpath = "//android.widget.ImageView[@content-desc]")
+    // Nutrition Topic (Image with content-desc)
+    @iOSXCUITFindBy(iOSClassChain = "**/XCUIElementTypeImage[`name != ''`]")
     public WebElement txtNutrition;
 
-    // Act Section Title
-    @AndroidFindBy(accessibility = "Act")
+    @iOSXCUITFindBy(accessibility = "Act")
     public WebElement txtActTitle;
 
-    // Act Description
-    @AndroidFindBy(xpath = "//android.view.View[contains(@content-desc,'For')]")
+    @iOSXCUITFindBy(iOSNsPredicate = "type == 'XCUIElementTypeStaticText' AND name BEGINSWITH 'For'")
     public WebElement txtActDescription;
 
-    // PROCEED Button
-    @AndroidFindBy(accessibility = "PROCEED")
+    @iOSXCUITFindBy(accessibility = "PROCEED")
     public WebElement btnProceed;
 
-    // Bottom Chat Icon OR Hamburger Icon (Clickable ImageView)
-    @AndroidFindBy(xpath = "//android.widget.ImageView[@clickable='true']")
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeImage[@visible='true']")
     public WebElement btnChatIcon;
 
-    // ✅ 1. Verify Page Display
+    // === Fallback Locators ===
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText[@name='DAILY PRIORITY']")
+    public WebElement dailyPriorityTitle_Xpath;
+
+    @iOSXCUITFindBy(xpath = "//XCUIElementTypeButton[@name='PROCEED']")
+    public WebElement btnProceed_Xpath;
+
+    // ===================================================================
+    // 1. Verify Page Display
+    // ===================================================================
     public PG_005_DailyPriorityPage Verify_Daily_Priority_Page_Displayed() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-        	Thread.sleep(1000);
-            if (dailyPriorityTitle.isDisplayed()) {
-                ExtentReportManager.info(methodName);
-                TestContext.getLogger().info(methodName + " - Daily Priority title is visible");
+            Thread.sleep(1000);
+            WebElement title = isDisplayedSafe(dailyPriorityTitle) ? dailyPriorityTitle : dailyPriorityTitle_Xpath;
+            if (title.isDisplayed()) {
+                ExtentReportManager.info(methodName + " - DAILY PRIORITY title is visible");
+                TestContext.getLogger().info(methodName + " - DAILY PRIORITY title is visible");
+            } else {
+                throw new Exception("Title not visible");
             }
         } catch (Exception e) {
-            ExtentReportManager.fail(methodName + " - Daily Priority title is NOT visible");
-            TestContext.getLogger().error(methodName + " - Daily Priority title is NOT visible", e);
+            ExtentReportManager.fail(methodName + " - DAILY PRIORITY title is NOT visible");
+            TestContext.getLogger().error(methodName + " - DAILY PRIORITY title is NOT visible", e);
             throw new RuntimeException(e);
         }
         return this;
     }
+
+    // ===================================================================
+    // 2. Verify Username
+    // ===================================================================
     public PG_005_DailyPriorityPage Verify_User_Name(String expectedName) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-        	Thread.sleep(1000);
+            Thread.sleep(1000);
             WebElement userNameElement = getUserNameElement(expectedName);
-            String actualName = userNameElement.getAttribute("content-desc").trim();
-
+            String actualName = userNameElement.getAttribute("name").trim();
             if (actualName.equals(expectedName)) {
                 ExtentReportManager.info(methodName + " - Username matches: " + expectedName);
                 TestContext.getLogger().info(methodName + " - Username matches: " + expectedName);
@@ -101,62 +117,61 @@ public class PG_005_DailyPriorityPage extends BaseClass {
         return this;
     }
 
+    // ===================================================================
+    // 3. Verify Current Date & Time
+    // ===================================================================
     public PG_005_DailyPriorityPage Verify_Current_Date_Time() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-            // ✅ Wait for Date and Time elements to be visible
             wait.until(ExpectedConditions.visibilityOf(txtDate));
             wait.until(ExpectedConditions.visibilityOf(txtTime));
 
-            // ✅ Get Date & Time from UI
-            String uiDate = txtDate.getAttribute("content-desc").trim();
-            String uiTime = txtTime.getAttribute("content-desc").trim();
+            String uiDate = txtDate.getAttribute("name").trim();
+            String uiTime = txtTime.getAttribute("name").trim();
 
             TestContext.getLogger().info("UI Date fetched: " + uiDate);
             TestContext.getLogger().info("UI Time fetched: " + uiTime);
 
-            // ✅ Format system date (Example: "Monday, November 4")
+            // Format expected date
             String expectedDate1 = new SimpleDateFormat("EEEE, MMMM d", Locale.ENGLISH).format(new Date());
-            String expectedDate2 = new SimpleDateFormat("EEEE, MMMM dd", Locale.ENGLISH).format(new Date()); // with leading zero
-
-            // ✅ Format system time (Example: "hh:mm a")
+            String expectedDate2 = new SimpleDateFormat("EEEE, MMMM dd", Locale.ENGLISH).format(new Date());
             String expectedTime = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date());
 
-            // ✅ Validate Date
+            // Validate Date
             if (uiDate.contains(expectedDate1) || uiDate.contains(expectedDate2)) {
-                ExtentReportManager.info(methodName + " - ✅ Date matches: " + expectedDate1);
-                TestContext.getLogger().info(methodName + " - ✅ Date matches: " + expectedDate1);
+                ExtentReportManager.info(methodName + " - Date matches: " + expectedDate1);
+                TestContext.getLogger().info(methodName + " - Date matches: " + expectedDate1);
             } else {
-               // ExtentReportManager.fail(methodName + " - ❌ Date mismatch! Expected: " + expectedDate1 + " or " + expectedDate2 + ", Found: " + uiDate);
-                TestContext.getLogger().error(methodName + " - ❌ Date mismatch! Found: " + uiDate);
+                ExtentReportManager.fail(methodName + " - Date mismatch! Expected: " + expectedDate1 + " or " + expectedDate2 + ", Found: " + uiDate);
+                TestContext.getLogger().error(methodName + " - Date mismatch! Found: " + uiDate);
             }
 
-            // ✅ Validate Time (just matches hours & AM/PM ignoring minute difference)
-            if (uiTime.startsWith(expectedTime.substring(0, 2)) && uiTime.endsWith(expectedTime.substring(expectedTime.length() - 2))) {
-                ExtentReportManager.info(methodName + " - ✅ Time format is correct (Hour & AM/PM match)");
+            // Validate Time (hour + AM/PM)
+            String expectedHour = expectedTime.substring(0, 2);
+            String expectedAmPm = expectedTime.substring(expectedTime.length() - 2);
+            if (uiTime.startsWith(expectedHour) && uiTime.endsWith(expectedAmPm)) {
+                ExtentReportManager.info(methodName + " - Time format is correct (Hour & AM/PM match)");
             } else {
-               // ExtentReportManager.fail(methodName + " - ❌ Time mismatch! Expected (approx.): " + expectedTime + ", Found: " );
+                ExtentReportManager Kain(methodName + " - Time mismatch! Expected (approx.): " + expectedTime + ", Found: " + uiTime);
             }
-
         } catch (Exception e) {
-            ExtentReportManager.fail(methodName + " - ❌ Failed to verify date & time");
-            TestContext.getLogger().error(methodName + " - ❌ Exception while verifying date & time", e);
+            ExtentReportManager.fail(methodName + " - Failed to verify date & time");
+            TestContext.getLogger().error(methodName + " - Exception while verifying date & time", e);
             throw new RuntimeException(e);
         }
         return this;
     }
 
-
-
-
-    // ✅ 4. Verify Session Based on Time
+    // ===================================================================
+    // 4. Verify Session Based on Time
+    // ===================================================================
     public PG_005_DailyPriorityPage Verify_Session_Based_On_Time() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-        	Thread.sleep(1000);
+            Thread.sleep(1000);
             String expectedSession = getExpectedSession();
-            String actualSession = txtSessionPriority.getAttribute("content-desc");
-            if (actualSession.equals(expectedSession)) {
+            String actualSession = txtSessionPriority.getAttribute("name");
+            if (actualSession.contains(expectedSession)) {
                 ExtentReportManager.info(methodName + " - Session is correct: " + expectedSession);
                 TestContext.getLogger().info(methodName + " - Session is correct: " + expectedSession);
             } else {
@@ -171,8 +186,7 @@ public class PG_005_DailyPriorityPage extends BaseClass {
         return this;
     }
 
-
-    // Helper for session logic
+    // Helper: Determine expected session
     private String getExpectedSession() {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         if (hour >= 0 && hour < 12) return "Morning Priority";
@@ -181,13 +195,16 @@ public class PG_005_DailyPriorityPage extends BaseClass {
         return "Night Priority";
     }
 
-    // ✅ 5. Click Proceed
+    // ===================================================================
+    // 5. Click Proceed
+    // ===================================================================
     public PG_005_DailyPriorityPage Click_On_Proceed() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
-        	Thread.sleep(1000);
-            btnProceed.click();
-            ExtentReportManager.info(methodName);
+            Thread.sleep(1000);
+            WebElement proceedBtn = isDisplayedSafe(btnProceed) ? btnProceed : btnProceed_Xpath;
+            proceedBtn.click();
+            ExtentReportManager.info(methodName + " - Clicked on PROCEED");
             TestContext.getLogger().info(methodName + " - Clicked on PROCEED");
         } catch (Exception e) {
             ExtentReportManager.fail(methodName + " - Failed to click PROCEED");
@@ -197,7 +214,9 @@ public class PG_005_DailyPriorityPage extends BaseClass {
         return this;
     }
 
-    // ✅ 6. Click Chat Icon
+    // ===================================================================
+    // 6. Click Chat Icon
+    // ===================================================================
     public PG_005_DailyPriorityPage Click_On_Chat_Icon() {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName().replace("_", " ");
         try {
@@ -212,11 +231,22 @@ public class PG_005_DailyPriorityPage extends BaseClass {
         return this;
     }
 
-
+    // ===================================================================
+    // Helper: Get Username Element Dynamically
+    // ===================================================================
     public WebElement getUserNameElement(String userName) {
         return TestContext.getDriver().findElement(
-                By.xpath("//android.view.View[@content-desc='" + userName + "']"));
+                By.xpath("//XCUIElementTypeStaticText[@name='" + userName + "']"));
     }
 
-
+    // ===================================================================
+    // Helper: Safe Display Check
+    // ===================================================================
+    private boolean isDisplayedSafe(WebElement el) {
+        try {
+            return el != null && el.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

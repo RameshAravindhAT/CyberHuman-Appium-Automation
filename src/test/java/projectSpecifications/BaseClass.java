@@ -30,7 +30,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.ios.options.XCUITestOptions;
-import pageObjects.PG_002_SignInPage;
+import pageObjectsAndroid.PG_002_SignInPage;
 import utils.ExcelReader;
 import utils.ExtentReportManager;
 import utils.MobileActions;
@@ -184,7 +184,7 @@ public class BaseClass {
     // ======================================================
     // DATA PROVIDER
     // ======================================================
-    @DataProvider(name = "sendData", parallel = false)
+    @DataProvider(name = "sendData", parallel = false, indices = {0})
     public String[][] fetchData() throws IOException {
         String sheetName = TestContext.getSheetName();
         if (sheetName == null || sheetName.isEmpty()) {

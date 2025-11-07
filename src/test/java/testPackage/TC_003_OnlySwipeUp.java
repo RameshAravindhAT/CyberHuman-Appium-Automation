@@ -4,7 +4,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import pageObjects.PG_000_DashboardModulePage;
+import pageObjectsAndroid.PG_000_DashboardModulePage;
 import projectSpecifications.BaseClass;
 import utils.ExtentReportManager;
 import utils.TestContext;

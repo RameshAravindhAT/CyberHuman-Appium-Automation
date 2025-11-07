@@ -11,7 +11,7 @@
           <include name="setUp"/>
           <include name="tearDown"/>
           <include name="testDetails"/>
-          <include name="Validate_Login_Scenarios" invocation-numbers="7 9 11"/>
+          <include name="Validate_Login_Scenarios" invocation-numbers="0"/>
           <include name="startReports"/>
           <include name="stopReports"/>
         </methods>

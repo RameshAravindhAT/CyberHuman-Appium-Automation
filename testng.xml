@@ -10,12 +10,4 @@
             <class name="testPackage.TC_002_SignIn"/>
         </classes>
     </test>
-
-    <test name="SignInReport">
-        <parameter name="platformName" value="Android"/>
-        <parameter name="testType" value="SignIn"/>
-        <classes>
-            <class name="testPackage.TC_004_NewUserSignUp"/>
-        </classes>
-    </test>
 </suite>

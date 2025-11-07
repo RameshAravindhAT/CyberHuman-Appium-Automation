@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.aventstack.extentreports.ExtentTest;
 
 import io.appium.java_client.AppiumDriver;
-import pageObjects.PG_002_SignInPage;
+import pageObjectsAndroid.PG_002_SignInPage;
 
 public class TestContext {
 

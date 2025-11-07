@@ -44,9 +44,9 @@ public class CustomTestListener extends BaseClass implements ITestListener {
 
         // Create ExtentTest
         if (description != null && !description.isEmpty()) {
-           // ExtentReportManager.createTest(methodName, description);
+         //   ExtentReportManager.createTest(methodName, description);  // Ensure the test is created
         } else {
-           // ExtentReportManager.createTest(methodName);
+          //  ExtentReportManager.createTest(methodName);  // Fallback if no description
         }
 
         // Add metadata
